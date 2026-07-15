@@ -1,43 +1,22 @@
-import axios from "axios";
-
-export default function UploadCard({ setSkills, setQuestions }) {
-  const handleUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("resume", file);
-
-    const res = await axios.post(
-      "http://localhost:8000/upload",
-      formData
-    );
-
-    setSkills(res.data.skills);
-    setQuestions(res.data.questions);
-  };
-
+export default function ProgressBar({ current, total }) {
   return (
-    <div className="rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-8 text-center">
-      <h1 className="text-2xl font-extrabold text-white">
-        Hire<span className="text-cyan-400">Prep</span>
-      </h1>
-
-      <p className="mt-3 text-slate-400 mb-6">
-        Upload your resume to generate interview questions
-      </p>
-
-      <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-600 rounded-lg p-8 cursor-pointer hover:border-cyan-400 transition">
-        <span className="text-slate-300 mb-2">
-          Upload Resume (PDF)
+    <div className="w-full max-w-xl mx-auto">
+      <div className="flex items-center justify-between mb-2 font-mono-display text-xs text-[#7d8590]">
+        <span>
+          // question {current + 1} of {total}
         </span>
-        <input
-          type="file"
-          accept=".pdf"
-          className="hidden"
-          onChange={handleUpload}
-        />
-      </label>
+        <span>{Math.round(((current + 1) / total) * 100)}%</span>
+      </div>
+      <div className="flex gap-1">
+        {Array.from({ length: total }).map((_, i) => (
+          <div
+            key={i}
+            className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
+              i <= current ? "bg-[#58a6ff]" : "bg-[#1c222c]"
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
